@@ -1,4 +1,3 @@
-VERSION < v"0.7.0-beta2.199" && __precompile__()
 """
 The HCubature module is a pure-Julia implementation of
 multidimensional "h-adaptive" integration.  That is, given
@@ -108,7 +107,8 @@ function hcubature_(f, a::SVector{n,T}, b::SVector{n,T}, norm, rtol_, atol, maxe
         E += box1.E + box2.E - box.E
         numevals += 2*evals_per_box
         # convergence test:
-        (E ≤ max(rtol*norm(I), atol) || numevals ≥ maxevals) && break
+        Inorm = norm(I)
+        (E ≤ max(rtol*Inorm, atol) || numevals ≥ maxevals || !isfinite(Inorm)) && break
     end
 
     # roundoff paranoia: re-sum
